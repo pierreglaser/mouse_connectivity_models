@@ -1,3 +1,6 @@
+import os
+import re
+
 from setuptools import setup, find_packages
 
 DISTNAME = 'mouse_connectivity_models'
@@ -10,8 +13,22 @@ URL = 'http://mouse-connectivity-models.readthedocs.io/en/latest/'
 DOWNLOAD_URL = 'https://github.com/AllenInstitute/mouse_connectivity_models'
 LICENSE = 'Allen Institute Software License'
 
-import mcmodels
-VERSION = mcmodels.__version__
+# Function to parse __version__ in mcmodelsloky`
+
+
+def find_version():
+    here = os.path.abspath(os.path.dirname(__file__))
+    with open(os.path.join(here, "mcmodels", "__init__.py")) as fp:
+        version_file = fp.read()
+    version_match = re.search(
+        r"^__version__ = ['\"]([^'\"]*)['\"]", version_file, re.M
+    )
+    if version_match:
+        return version_match.group(1)
+    raise RuntimeError("Unable to find version string.")
+
+
+VERSION = find_version()
 
 extra_setuptools_args = dict(include_package_data=True,
                              setup_requires=['pytest-runner'])
